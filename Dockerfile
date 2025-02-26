@@ -1,23 +1,25 @@
-# Use the official Python image as the base image
-FROM python:3.11-slim
+# Use an official Python runtime as a parent image
+FROM python:3.10-slim
 
-# Set the working directory inside the container
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy the source code into the container
-COPY src/ ./src/
+# Copy the requirement file first for dependency installation
+COPY requirements.txt .
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    libusb-1.0-0 \
-    libplist-utils \
-    && rm -rf /var/lib/apt/lists/*
+# Install required dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose the port the Flask app runs on
+# Copy the application code to the container
+COPY src/ .
+
+# Expose the port your Flask app runs on
 EXPOSE 54321
 
-# Set environment variables (if necessary)
-ENV PYTHONUNBUFFERED=1
+# Define environment variable
+ENV FLASK_APP=main.py
+ENV FLASK_RUN_HOST=0.0.0.0
+ENV FLASK_RUN_PORT=54321
 
-# Define the command to run the application
-CMD ["python", "src/main.py"]
+# Run the application
+CMD ["python", "main.py"]
