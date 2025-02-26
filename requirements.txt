@@ -3,7 +3,7 @@ requests
 pyuac
 psutil
 pycountry
-pymobiledevice3
+pymobiledevice3==2.12.0
 asyncio
 argparse
 urllib3
