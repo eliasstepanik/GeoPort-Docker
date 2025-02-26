@@ -1,31 +1,26 @@
-# Use the official Python image as the base
-FROM python:3.9-slim
+# Use the official Python image as the base image
+FROM python:3.11-slim
 
-# Set environment variables
-ENV PYTHONUNBUFFERED=1
-
-# Set the working directory
+# Set the working directory inside the container
 WORKDIR /app
 
+# Copy the source code into the container
+COPY src/ ./src/
+
 # Install system dependencies
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    libimobiledevice6 \
-    usbmuxd \
-    libplist3 \
-    libusbmuxd-tools \
-    ideviceinstaller \
+RUN apt-get update && apt-get install -y \
+    libusb-1.0-0 \
+    libplist-utils \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the application code
-COPY . .
+# Expose the port the Flask app runs on
+EXPOSE 54321
 
-# Expose the port that the application runs on
-EXPOSE 5000
+# Set environment variables (if necessary)
+ENV PYTHONUNBUFFERED=1
 
-# Command to run the application
+# Define the command to run the application
 CMD ["python", "src/main.py"]
