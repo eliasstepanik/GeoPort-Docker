@@ -1,0 +1,9 @@
+flask
+requests
+pyuac
+psutil
+pycountry
+pymobiledevice3
+asyncio
+argparse
+urllib3
